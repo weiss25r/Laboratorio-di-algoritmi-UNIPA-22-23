@@ -5,6 +5,7 @@
 using namespace std;
 
 List *createList(int info) {
+
     List *head = new List;
     head->info = info;
     head->next = nullptr;
@@ -13,6 +14,8 @@ List *createList(int info) {
 
 void insert(List *head, int info) 
 {
+    if(head ==nullptr) return;
+
     List *node = new List;
     node->next = nullptr;
     node->info = info;
@@ -27,6 +30,9 @@ void insert(List *head, int info)
 }
 
 void printList(List *head){
+
+    if(head ==nullptr) return;
+
     List *ptr = head;
 
     cout << "List: " << endl;
@@ -49,7 +55,7 @@ void reverse(List *head) {
     ptr = head;
     ptrHalf = ptr;
     
-    while (ptr->next != nullptr) {
+    while (ptr != nullptr && ptr->next != nullptr) {
         ptr = ptr->next->next;
         ptrHalf = ptrHalf->next;
     }
@@ -72,6 +78,27 @@ void reverse(List *head) {
     int tmp = head->info;
     head->info = sx->info;
     sx->info = tmp;
+}
+
+void orderOddEven(List *head) {
+    if(head ==nullptr) return;
+    if(head->next == nullptr) return;
+
+    List *ptrEven = head->next;
+    List *ptrOdd = head;
+    List *tmp;
+    List *ptrEvenStart = ptrEven;
+
+    while(ptrEven->next != nullptr && ptrOdd->next !=nullptr) {
+        tmp = ptrEven->next;
+        ptrEven->next = ptrEven->next->next;
+        ptrOdd->next = tmp;
+
+        ptrOdd = ptrOdd->next;
+        ptrEven = ptrEven->next;
+    }
+
+    ptrOdd->next = ptrEvenStart;
 }
 
 void freeList(List *head) {
