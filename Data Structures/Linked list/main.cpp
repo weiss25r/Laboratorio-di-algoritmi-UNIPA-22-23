@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include "list.h"
 
-int main(void)
+int main()
 {
     List *list = createList(1);
     insert(list, 2);
