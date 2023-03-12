@@ -10,23 +10,31 @@
 int main()
 {
     BinaryTree *eren = createTree(1);
-    insert(eren, 2, "ll");
-    insert(eren, 3, "ll");
-    insert(eren, 4, "rr");
-    insert(eren, 5, "rl");
-    insert(eren, 6, "rr");
-    insert(eren, 7, "rr");
-    insert(eren, 8, "rl");
+    insertLeftTo(eren, 2);
+    insertRightTo(eren->left, 3);
+    insertRightTo(eren, 4);
+    insertLeftTo(eren->right, 5);
+    insertRightTo(eren->left->right, 6);
+    insertLeftTo(eren->left, 11);
+    insertRightTo(eren->right->left, 13);
 
-
+    /*
+    cout << "Visita in ordine simmetrico: ";
     inOrder(eren);
     cout << endl;
+
+    cout << "Visita in pre ordine: ";
     preOrder(eren);
+     */
 
     int p[] = {1, 2, 3, 4, 5};
     int i[] = {2, 3, 1, 5, 4};
+    BinaryTree *tree = createFrom(p, i, 0, 4, 0, 4);
 
-    //BinaryTree *tree = createFrom(p, i, 0, 4, 0, 4);
+    cout << "Visita in ordine simmetrico: ";
+    inOrder(tree);
+    cout << endl;
 
-    //inOrder(tree);
+    cout << "Visita in pre ordine: ";
+    preOrder(tree);
 }

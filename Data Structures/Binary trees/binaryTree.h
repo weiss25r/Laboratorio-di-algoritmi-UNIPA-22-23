@@ -18,7 +18,8 @@ struct BinaryTree {
 };
 
 BinaryTree *createTree(int info);
-void insert(BinaryTree* root, int info, string mode);
+void insertRightTo(BinaryTree *node, int info);
+void insertLeftTo(BinaryTree *node, int info);
 bool isEmpty(BinaryTree* root);
 void inOrder(BinaryTree* root);
 void preOrder(BinaryTree* root);
