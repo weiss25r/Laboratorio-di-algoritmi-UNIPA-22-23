@@ -29,3 +29,4 @@ int getHeight(BinaryTree* root);
 BinaryTree *createMirror(BinaryTree* root);
 void convertToMirror(BinaryTree* root);
 BinaryTree *createFrom(int *preOrder, int *inOrder, int lp, int rp, int li, int ri);
+BinaryTree *createArchimedeOne(int *sequence, int left, int right);
