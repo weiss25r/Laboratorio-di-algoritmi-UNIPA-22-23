@@ -31,10 +31,18 @@ int main()
     int i[] = {2, 3, 1, 5, 4};
     BinaryTree *tree = createFrom(p, i, 0, 4, 0, 4);
 
+
     cout << "Visita in ordine simmetrico: ";
     inOrder(tree);
     cout << endl;
 
     cout << "Visita in pre ordine: ";
     preOrder(tree);
+
+    int sequence[] = {9, 3, 7, 1, 8, 12, 10, 20, 15, 18, 5};
+
+    /*
+    BinaryTree *archimede = createArchimede(sequence, 0, 10);
+    inOrder(archimede);
+    */
 }

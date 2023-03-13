@@ -84,7 +84,7 @@ void convertToMirror(BinaryTree* root) {
 }
 
 BinaryTree *createFrom(int *preOrder, int *inOrder, int lp, int rp, int li, int ri) {
-    if(lp > rp) {
+    if(lp > rp || li > ri) {
         return nullptr;
     }
     else {
@@ -102,3 +102,39 @@ BinaryTree *createFrom(int *preOrder, int *inOrder, int lp, int rp, int li, int 
         } else return nullptr;
     }
 }
+
+int min(int *array, int left, int right) {
+    int m = left;
+
+    for (int i = left; i <= right; ++i) {
+        if(array[i] < array[m]) {
+            m = i;
+        }
+    }
+
+    return m;
+}
+
+
+//T(n) = T(n-1)+O(n) = O(n^2)
+BinaryTree *createArchimedeOne(int *sequence, int left, int right) {
+    if(left == right) {
+        return createTree(sequence[left]);
+    }
+    else if(left > right){
+        return nullptr;
+    }
+    else {
+        int m = min(sequence, left, right);
+
+        BinaryTree *a = createArchimedeOne(sequence, left, m-1);
+        BinaryTree *b = createArchimedeOne(sequence, m+1, right);
+
+        BinaryTree *node = createTree(sequence[m]);
+        node->left = a;
+        node->right = b;
+
+        return node;
+    }
+}
+
