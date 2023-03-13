@@ -27,9 +27,9 @@ int main()
     preOrder(eren);
      */
 
-    int p[] = {1, 2, 3, 4, 5};
-    int i[] = {2, 3, 1, 5, 4};
-    BinaryTree *tree = createFrom(p, i, 0, 4, 0, 4);
+    int p[] = {4, 6,  7, 1, 2, 3};
+    int i[] = {7, 6, 1, 4, 2, 3};
+    BinaryTree *tree = createFrom(p, i, 5, 0, 5);
 
 
     cout << "Visita in ordine simmetrico: ";

@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include "binaryTree.h"
 
+int pIndex = 0;
+
 BinaryTree *createTree(int info) {
     auto *root = new BinaryTree;
     root->info = info;
@@ -83,19 +85,23 @@ void convertToMirror(BinaryTree* root) {
     }
 }
 
-BinaryTree *createFrom(int *preOrder, int *inOrder, int lp, int rp, int li, int ri) {
-    if(lp > rp || li > ri) {
+//O(N^2)?
+BinaryTree *createFrom(int *preOrder, int *inOrder, int rp, int li, int ri){
+
+    if(li > ri || pIndex>rp) {
         return nullptr;
     }
     else {
         int j;
 
-        for(j = li; j <= ri && inOrder[j] != preOrder[lp]; j++);
+        for(j = li; j <= ri && inOrder[j] != preOrder[pIndex]; j++);
 
         if(j <= ri) {
-            BinaryTree *c = createTree(preOrder[lp]);
-            BinaryTree *a = createFrom(preOrder, inOrder, lp+1, rp-j, li, j-1);
-            BinaryTree *b = createFrom(preOrder, inOrder, rp-j+1, rp, j+1, ri);
+            BinaryTree *c = createTree(preOrder[pIndex]);
+            pIndex++;
+
+            BinaryTree *a = createFrom(preOrder, inOrder, rp, li, j-1);
+            BinaryTree *b = createFrom(preOrder, inOrder, rp, j+1, ri);
             c->left = a;
             c->right = b;
             return c;
