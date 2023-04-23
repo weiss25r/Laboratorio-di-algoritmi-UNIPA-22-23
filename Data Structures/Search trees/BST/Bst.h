@@ -10,11 +10,11 @@
 
 struct Node {
     int info;
-    int heigth;
+    int height;
     Node *left;
     Node *right;
 
-    Node(int info, int height, Node *left, Node *right) : info(info), heigth(height), left(left), right(right) {}
+    Node(int info, int height, Node *left, Node *right) : info(info), height(height), left(left), right(right) {}
 };
 
 class Bst {
@@ -29,7 +29,7 @@ public:
     void remove(int key);
     int max();
     int min();
-    int getHeigth() const;
+    int getheight() const;
     void inOrder() const;
     void preOrder() const;
     void postOrder() const;
@@ -49,7 +49,7 @@ private:
     void preOrderHelper(Node * rootNode) const;
     void postOrderHelper(Node * rootNode) const;
     void deleteTree(Node *&rootNode);
-    int assignHeigth(Node *nodeOne, Node *nodeTwo, int mode);
+    int assignheight(Node *nodeOne, Node *nodeTwo, int mode);
     void copyHelper(Node *&rootOne, Node *rootTwo);
 };
 

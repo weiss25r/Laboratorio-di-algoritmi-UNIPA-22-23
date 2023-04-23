@@ -26,9 +26,9 @@ Bst::~Bst() {
     deleteTree(root);
 }
 
-//getter for heigth
-int Bst::getHeigth() const {
-    return this->root != nullptr ? root->heigth : -1;
+//getter for height
+int Bst::getheight() const {
+    return this->root != nullptr ? root->height : -1;
 }
 
 //dictionary operations
@@ -81,11 +81,11 @@ void Bst::insertHelper(Node *&rootNode, int info)
     {
         if(info <= rootNode->info) {
             insertHelper(rootNode->left, info);
-            rootNode->heigth = assignHeigth(rootNode, rootNode->left, 0);
+            rootNode->height = assignheight(rootNode, rootNode->left, 0);
         }
         else {
             insertHelper(rootNode->right, info);
-            rootNode->heigth = assignHeigth(rootNode, rootNode->right, 0);
+            rootNode->height = assignheight(rootNode, rootNode->right, 0);
         }
     }
 }
@@ -144,11 +144,11 @@ void Bst::removeHelper(Node *&rootNode, int info)
     //se rootNode != nullptr, si cerca il nodo da cancellare
     if(info < rootNode->info) {
         removeHelper(rootNode->left, info);
-        rootNode->heigth = assignHeigth(rootNode, rootNode->right, 1);
+        rootNode->height = assignheight(rootNode, rootNode->right, 1);
     }
     else if(info > rootNode->info) {
         removeHelper(rootNode->right, info);
-        rootNode->heigth = assignHeigth(rootNode, rootNode->left, 1);
+        rootNode->height = assignheight(rootNode, rootNode->left, 1);
     }
 
     //se viene trovato
@@ -225,19 +225,19 @@ void Bst::deleteTree(Node *&rootNode)
     }
 }
 
-int Bst::assignHeigth(Node *nodeOne, Node *nodeTwo, int mode) {
+int Bst::assignheight(Node *nodeOne, Node *nodeTwo, int mode) {
     if(nodeTwo == nullptr) {
-        return nodeOne->heigth - 1;
+        return nodeOne->height - 1;
     }
     //mode == 0: insertion
     else if(mode == 0) {
-        int newHeigth = nodeTwo->heigth + 1;
-        return newHeigth > nodeOne->heigth ? newHeigth : nodeOne->heigth;
+        int newheight = nodeTwo->height + 1;
+        return newheight > nodeOne->height ? newheight : nodeOne->height;
     }
     //mode == 1: insertion
     else {
-        int h1 = nodeOne->heigth-1;
-        int h2 = nodeTwo->heigth+1;
+        int h1 = nodeOne->height-1;
+        int h2 = nodeTwo->height+1;
         return h1 > h2 ? h1 : h2;
     }
 }
@@ -249,7 +249,7 @@ void Bst::copyHelper(Node *&rootOne, Node *rootTwo)
     {
         //visita in PRE-ordine
         //copia la radice
-        rootOne = new Node(rootTwo->info, rootTwo->heigth, nullptr, nullptr);
+        rootOne = new Node(rootTwo->info, rootTwo->height, nullptr, nullptr);
 
         //copia il sottoalbero sinistro
         copyHelper(rootOne->left, rootTwo->left);
@@ -280,7 +280,7 @@ std::ostream &operator<<(std::ostream &os, const Bst &bst) {
     bst.postOrder();
     os << std::endl;
 
-    os << "Tree heigth: " << bst.root->heigth << std::endl;
+    os << "Tree height: " << bst.root->height << std::endl;
     os << std::endl;
     return os;
 }
