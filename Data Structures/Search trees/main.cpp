@@ -1,13 +1,12 @@
 #include <iostream>
 #include <cstdlib>
-#include "Bst.h"
+#include "BstTree.h"
 
 using namespace std;
 
-
 int main() {
     //random binary search tree
-    const int kDim = 8;
+    const int kDim = 10;
 
     vector<int> keys(kDim);
 
@@ -17,17 +16,18 @@ int main() {
         keys[i] = rand() % kDim + 1;
     }
 
-    Bst bst(keys);
+    BstTree bst(keys);
 
-    Bst bst2(bst);
+    BstTree bst2(bst);
     cout << endl << bst2;
     bst2.remove(keys[kDim-1]);
     bst.insert(keys[kDim-1]+ 200);
     cout << bst2;
     cout << bst;
 
-    Bst bst3 = bst;
+    BstTree bst3 = bst;
     bst3 = bst2;
+
     cout << bst3;
 
     return 0;

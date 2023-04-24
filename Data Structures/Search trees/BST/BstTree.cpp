@@ -2,75 +2,75 @@
 // Created by Raffaele on 21/04/2023.
 //
 
-#include "Bst.h"
+#include "BstTree.h"
 
 #include <iostream>
 
-Bst::Bst(int rootKey) {
+BstTree::BstTree(int rootKey) {
     root = new Node(rootKey, 0, nullptr, nullptr);
 }
 
-Bst::Bst(const std::vector<int> &keys) {
+BstTree::BstTree(const std::vector<int> &keys) {
     root = nullptr;
     for(int key : keys) {
         insertHelper(root, key);
     }
 }
 
-Bst::Bst(const Bst &bst) {
+BstTree::BstTree(const BstTree &bst) {
     root = nullptr;
     copyHelper(root, bst.root);
 }
 
-Bst::~Bst() {
+BstTree::~BstTree() {
     deleteTree(root);
 }
 
 //getter for height
-int Bst::getheight() const {
+int BstTree::getHeight() const {
     return this->root != nullptr ? root->height : -1;
 }
 
 //dictionary operations
-void Bst::insert(int info) {
+void BstTree::insert(int info) {
     insertHelper(root, info);
 }
 
-bool Bst::search(int key) const{
+bool BstTree::search(int key) const{
     return searchHelper(root, key);
 }
 
-void Bst::remove(int key) {
+void BstTree::remove(int key) {
     if(searchHelper(root, key))
         removeHelper(root, key);
 }
 
 //visits
-void Bst::preOrder() const {
+void BstTree::preOrder() const {
     preOrderHelper(root);
 }
 
-void Bst::postOrder() const{
+void BstTree::postOrder() const{
     postOrderHelper(root);
 }
 
-void Bst::inOrder() const{
+void BstTree::inOrder() const{
     inOrderHelper(root);
 }
 
 //max and min
-int Bst::max() {
+int BstTree::max() {
     Node *max = maxHelper(root);
     return max->info;
 }
 
-int Bst::min() {
+int BstTree::min() {
     Node *min = minHelper(root);
     return min->info;
 }
 
 //"helper" methods
-void Bst::insertHelper(Node *&rootNode, int info)
+void BstTree::insertHelper(Node *&rootNode, int info)
 {
     if(rootNode == nullptr)
     {
@@ -81,16 +81,16 @@ void Bst::insertHelper(Node *&rootNode, int info)
     {
         if(info <= rootNode->info) {
             insertHelper(rootNode->left, info);
-            rootNode->height = assignheight(rootNode, rootNode->left, 0);
+            rootNode->height = assignHeight(rootNode, rootNode->left, 0);
         }
         else {
             insertHelper(rootNode->right, info);
-            rootNode->height = assignheight(rootNode, rootNode->right, 0);
+            rootNode->height = assignHeight(rootNode, rootNode->right, 0);
         }
     }
 }
 
-bool Bst::searchHelper(Node *root, int info) const{
+bool BstTree::searchHelper(Node *root, int info) const{
     if(root == nullptr) {
         return false;
     }
@@ -107,7 +107,7 @@ bool Bst::searchHelper(Node *root, int info) const{
     }
 }
 
-void Bst::inOrderHelper(Node *rootNode) const{
+void BstTree::inOrderHelper(Node *rootNode) const{
     if(rootNode != nullptr)
     {
         inOrderHelper(rootNode->left);
@@ -116,7 +116,7 @@ void Bst::inOrderHelper(Node *rootNode) const{
     }
 }
 
-void Bst::preOrderHelper(Node *rootNode) const
+void BstTree::preOrderHelper(Node *rootNode) const
 {
     if(rootNode != nullptr)
     {
@@ -126,7 +126,7 @@ void Bst::preOrderHelper(Node *rootNode) const
     }
 }
 
-void Bst::postOrderHelper(Node *rootNode) const
+void BstTree::postOrderHelper(Node *rootNode) const
 {
     if(rootNode != nullptr)
     {
@@ -136,7 +136,7 @@ void Bst::postOrderHelper(Node *rootNode) const
     }
 }
 
-void Bst::removeHelper(Node *&rootNode, int info)
+void BstTree::removeHelper(Node *&rootNode, int info)
 {
     //caso 1: l'elemento non è stato trovato
     if(rootNode == nullptr) return;
@@ -144,11 +144,11 @@ void Bst::removeHelper(Node *&rootNode, int info)
     //se rootNode != nullptr, si cerca il nodo da cancellare
     if(info < rootNode->info) {
         removeHelper(rootNode->left, info);
-        rootNode->height = assignheight(rootNode, rootNode->right, 1);
+        rootNode->height = assignHeight(rootNode, rootNode->right, 1);
     }
     else if(info > rootNode->info) {
         removeHelper(rootNode->right, info);
-        rootNode->height = assignheight(rootNode, rootNode->left, 1);
+        rootNode->height = assignHeight(rootNode, rootNode->left, 1);
     }
 
     //se viene trovato
@@ -194,7 +194,7 @@ void Bst::removeHelper(Node *&rootNode, int info)
     }
 }
 
-Node *Bst::maxHelper(Node *rootNode) const {
+Node *BstTree::maxHelper(Node *rootNode) const {
     if(rootNode == nullptr) {
         return nullptr;
     }
@@ -204,18 +204,18 @@ Node *Bst::maxHelper(Node *rootNode) const {
     else return maxHelper(rootNode->right);
 }
 
-Node *&Bst::minHelper(Node *&rootNode) {
+Node *&BstTree::minHelper(Node *&rootNode) {
     if(rootNode == nullptr) {
         return rootNode;
     }
     else if(rootNode->left == nullptr) {
         return rootNode;
     }
-    else return minHelper(rootNode->right);
+    else return minHelper(rootNode->left);
 }
 
 //free the memory in destructor
-void Bst::deleteTree(Node *&rootNode)
+void BstTree::deleteTree(Node *&rootNode)
 {
     if(rootNode != nullptr)
     {
@@ -225,7 +225,7 @@ void Bst::deleteTree(Node *&rootNode)
     }
 }
 
-int Bst::assignheight(Node *nodeOne, Node *nodeTwo, int mode) {
+int BstTree::assignHeight(Node *nodeOne, Node *nodeTwo, int mode) {
     if(nodeTwo == nullptr) {
         return nodeOne->height - 1;
     }
@@ -243,7 +243,7 @@ int Bst::assignheight(Node *nodeOne, Node *nodeTwo, int mode) {
 }
 
 
-void Bst::copyHelper(Node *&rootOne, Node *rootTwo)
+void BstTree::copyHelper(Node *&rootOne, Node *rootTwo)
 {
     if(rootTwo != nullptr)
     {
@@ -258,7 +258,7 @@ void Bst::copyHelper(Node *&rootOne, Node *rootTwo)
 }
 
 //operators
-Bst &Bst::operator=(const Bst &bst) {
+BstTree &BstTree::operator=(const BstTree &bst) {
     if(this != &bst)
     {
         deleteTree(root);
@@ -267,7 +267,7 @@ Bst &Bst::operator=(const Bst &bst) {
     }
     return *this;
 }
-std::ostream &operator<<(std::ostream &os, const Bst &bst) {
+std::ostream &operator<<(std::ostream &os, const BstTree &bst) {
 
     os << "In order traversal: ";
     bst.inOrder();
