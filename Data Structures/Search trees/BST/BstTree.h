@@ -50,7 +50,7 @@ protected:
     void preOrderHelper(Node * rootNode) const;
     void postOrderHelper(Node * rootNode) const;
     void deleteTree(Node *&rootNode);
-    int assignHeight(Node *nodeOne, Node *nodeTwo, int mode);
+    int assignHeight(Node *node);
     void copyHelper(Node *&rootOne, Node *rootTwo);
 };
 

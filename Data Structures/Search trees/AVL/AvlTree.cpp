@@ -28,11 +28,11 @@ void AvlTree::insertHelper(Node *&rootNode, int info)
     {
         if(info <= rootNode->info) {
             insertHelper(rootNode->left, info);
-            rootNode->height = assignHeight(rootNode, rootNode->left, 0);
+            rootNode->height = assignHeight(rootNode);
         }
         else {
             insertHelper(rootNode->right, info);
-            rootNode->height = assignHeight(rootNode, rootNode->right, 0);
+            rootNode->height = assignHeight(rootNode);
         }
 
         //calcola fattore di bilanciamento
@@ -64,27 +64,20 @@ void AvlTree::removeHelper(Node *&rootNode, int info)
     //se rootNode != nullptr, si cerca il nodo da cancellare
     if(info < rootNode->info) {
         removeHelper(rootNode->left, info);
-        rootNode->height = assignHeight(rootNode, rootNode->right, 1);
+        rootNode->height = assignHeight(rootNode);
     }
     else if(info > rootNode->info) {
         removeHelper(rootNode->right, info);
-        rootNode->height = assignHeight(rootNode, rootNode->left, 1);
+        rootNode->height = assignHeight(rootNode);
     }
 
     //se viene trovato
     else
     {
         //caso 1: il nodo da cancellare è una foglia
-        if(rootNode->left == nullptr && rootNode->right == nullptr)
-        {
-            delete rootNode;
-            rootNode = nullptr;
-        }
-
         //caso 2: il nodo da cancellare ha un figlio
-
         //..destro
-        else if(rootNode->right != nullptr && rootNode->left == nullptr)
+        if(rootNode->left == nullptr)
         {
             Node *tmp = rootNode->right;
             delete rootNode;
@@ -92,7 +85,7 @@ void AvlTree::removeHelper(Node *&rootNode, int info)
         }
 
         //.. sinistro
-        else if(rootNode->left != nullptr && rootNode->right == nullptr)
+        else if(rootNode->right == nullptr)
         {
             Node *tmp = rootNode->left;
             delete rootNode;
@@ -139,14 +132,9 @@ void AvlTree::rotateLeft(Node *&node) {
     node = rightSon;
 
     //aggiorna le altezze per "v"
-    int hl = getNodeHeight(node->left->left);
-    int hr = getNodeHeight(node->left->right);
-    node->left->height = hl+1 > hr+1 ? hl+1 : hr+1;
-
+    node->left->height = assignHeight(node->left);
     //.. e per u
-    hl = getNodeHeight(node->left);
-    hr = getNodeHeight(node->right);
-    node->height = hl+1 > hr+1 ? hl+1 : hr+1;
+    node->height = assignHeight(node);
 }
 
 void AvlTree::rotateRight(Node *&node) {
@@ -158,14 +146,10 @@ void AvlTree::rotateRight(Node *&node) {
     node = leftSon;
 
     //aggiorna le altezze per "v"
-    int hl = getNodeHeight(node->right->left);
-    int hr = getNodeHeight(node->right->right);
-    node->right->height = hl+1 > hr+1 ? hl+1 : hr+1;
+    node->right->height = assignHeight(node->right);
 
     //.. e per u
-    hl = getNodeHeight(node->left);
-    hr = getNodeHeight(node->right);
-    node->height = hl+1 > hr+1 ? hl+1 : hr+1;
+    node->height = assignHeight(node);
 
 }
 

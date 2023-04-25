@@ -5,7 +5,7 @@
 #include "BstTree.h"
 
 #include <iostream>
-
+#include <climits>
 BstTree::BstTree(int rootKey) {
     root = new Node(rootKey, 0, nullptr, nullptr);
 }
@@ -45,7 +45,7 @@ void BstTree::remove(int key) {
         removeHelper(root, key);
 }
 
-//visits
+//traversals
 void BstTree::preOrder() const {
     preOrderHelper(root);
 }
@@ -87,11 +87,11 @@ void BstTree::insertHelper(Node *&rootNode, int info)
     {
         if(info <= rootNode->info) {
             insertHelper(rootNode->left, info);
-            rootNode->height = assignHeight(rootNode, rootNode->left, 0);
+            rootNode->height = assignHeight(rootNode);
         }
         else {
             insertHelper(rootNode->right, info);
-            rootNode->height = assignHeight(rootNode, rootNode->right, 0);
+            rootNode->height = assignHeight(rootNode);
         }
     }
 }
@@ -121,27 +121,20 @@ void BstTree::removeHelper(Node *&rootNode, int info)
     //se rootNode != nullptr, si cerca il nodo da cancellare
     if(info < rootNode->info) {
         removeHelper(rootNode->left, info);
-        rootNode->height = assignHeight(rootNode, rootNode->right, 1);
+        rootNode->height = assignHeight(rootNode);
     }
     else if(info > rootNode->info) {
         removeHelper(rootNode->right, info);
-        rootNode->height = assignHeight(rootNode, rootNode->left, 1);
+        rootNode->height = assignHeight(rootNode);
     }
 
     //se viene trovato
     else
     {
-        //caso 1: il nodo da cancellare è una foglia
-        if(rootNode->left == nullptr && rootNode->right == nullptr)
-        {
-            delete rootNode;
-            rootNode = nullptr;
-        }
-
-        //caso 2: il nodo da cancellare ha un figlio
+        //caso 1: il nodo da cancellare è una foglia oppure ha un figlio
 
         //..destro
-        else if(rootNode->right != nullptr && rootNode->left == nullptr)
+        if(rootNode->left == nullptr)
         {
             Node *tmp = rootNode->right;
             delete rootNode;
@@ -149,14 +142,14 @@ void BstTree::removeHelper(Node *&rootNode, int info)
         }
 
         //.. sinistro
-        else if(rootNode->left != nullptr && rootNode->right == nullptr)
+        else if(rootNode->right == nullptr)
         {
             Node *tmp = rootNode->left;
             delete rootNode;
             rootNode = tmp;
         }
 
-        //caso 3: il nodo da cancellare ha 3 figli
+        //caso 2: il nodo da cancellare ha 2 figli
         else
         {
             //si cerca il minimo del sottoalbero destro
@@ -231,21 +224,11 @@ void BstTree::deleteTree(Node *&rootNode)
     }
 }
 
-int BstTree::assignHeight(Node *nodeOne, Node *nodeTwo, int mode) {
-    if(nodeTwo == nullptr) {
-        return nodeOne->height - 1;
-    }
-    //mode == 0: insertion
-    else if(mode == 0) {
-        int newHeight = nodeTwo->height + 1;
-        return newHeight > nodeOne->height ? newHeight : nodeOne->height;
-    }
-    //mode == 1: insertion
-    else {
-        int h1 = nodeOne->height-1;
-        int h2 = nodeTwo->height+1;
-        return h1 > h2 ? h1 : h2;
-    }
+int BstTree::assignHeight(Node *node) {
+    int leftHeight = node->left != nullptr ? node->left->height : -1 ;
+    int rightHeight = node->right != nullptr ? node->right->height : -1;
+
+    return 1 + std::max(leftHeight, rightHeight);
 }
 
 
@@ -276,19 +259,24 @@ BstTree &BstTree::operator=(const BstTree &bst) {
 
 std::ostream &operator<<(std::ostream &os, const BstTree &bst) {
 
-    os << "In order traversal: ";
-    bst.inOrder();
-    os << std::endl;
-    os << "Pre order traversal: ";
-    bst.preOrder();
-    os << std::endl;
+    if(!bst.isEmpty()) {
+        os << "In order traversal: ";
+        bst.inOrder();
+        os << std::endl;
+        os << "Pre order traversal: ";
+        bst.preOrder();
+        os << std::endl;
 
-    os << "Post order traversal: ";
-    bst.postOrder();
-    os << std::endl;
+        os << "Post order traversal: ";
+        bst.postOrder();
+        os << std::endl;
 
-    os << "Tree height: " << bst.root->height << std::endl;
-    os << std::endl;
+        os << "Tree height: " << bst.getHeight() << std::endl;
+        os << std::endl;
+    }
+
+    else os << "Tree is empty";
+
     return os;
 }
 
