@@ -20,6 +20,7 @@ struct Node {
 class BstTree {
 
 public:
+    BstTree() {root = nullptr;}
     explicit BstTree(int rootKey);
     explicit BstTree(const std::vector<int> &keys);
     BstTree(const BstTree &bst);
@@ -32,6 +33,7 @@ public:
     void inOrder() const;
     void preOrder() const;
     void postOrder() const;
+    bool isEmpty() const {return root == nullptr;}
     BstTree& operator=(const BstTree& bst);
     ~BstTree();
 

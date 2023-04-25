@@ -7,8 +7,12 @@
 
 int main()
 {
-    AvlTree avlTree(10);
-    avlTree.insert(8);
-    avlTree.insert(9);
+    AvlTree avlTree(19);
+    avlTree.insert(13);
+    avlTree.insert(16);
+    avlTree.insert(15);
+    avlTree.insert(14);
+    avlTree.remove(15);
 
+    std::cout << avlTree;
 }

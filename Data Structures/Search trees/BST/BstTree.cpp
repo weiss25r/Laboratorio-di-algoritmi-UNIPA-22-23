@@ -13,7 +13,7 @@ BstTree::BstTree(int rootKey) {
 BstTree::BstTree(const std::vector<int> &keys) {
     root = nullptr;
     for(int key : keys) {
-        insertHelper(root, key);
+        BstTree::insertHelper(root, key);
     }
 }
 
@@ -60,13 +60,19 @@ void BstTree::inOrder() const{
 
 //max and min
 int BstTree::max() {
-    Node *max = maxHelper(root);
-    return max->info;
+    if(root != nullptr) {
+        Node *maxNode = maxHelper(root);
+        return maxNode->info;
+    }
+    else return INT_MAX;
 }
 
 int BstTree::min() {
-    Node *min = minHelper(root);
-    return min->info;
+    if(root != nullptr) {
+        Node *minNode = minHelper(root);
+        return minNode->info;
+    }
+    else return INT_MIN;
 }
 
 //"helper" methods
@@ -90,49 +96,20 @@ void BstTree::insertHelper(Node *&rootNode, int info)
     }
 }
 
-bool BstTree::searchHelper(Node *root, int info) const{
-    if(root == nullptr) {
+bool BstTree::searchHelper(Node *rootNode, int info) const{
+    if(rootNode == nullptr) {
         return false;
     }
-    else if(root->info == info) {
+    else if(rootNode->info == info) {
         return true;
     }
     else {
-        if(info <= root->info) {
-            return searchHelper(root->left, info);
+        if(info <= rootNode->info) {
+            return searchHelper(rootNode->left, info);
         }
         else {
-            return searchHelper(root->right, info);
+            return searchHelper(rootNode->right, info);
         }
-    }
-}
-
-void BstTree::inOrderHelper(Node *rootNode) const{
-    if(rootNode != nullptr)
-    {
-        inOrderHelper(rootNode->left);
-        std::cout << rootNode->info << " ";
-        inOrderHelper(rootNode->right);
-    }
-}
-
-void BstTree::preOrderHelper(Node *rootNode) const
-{
-    if(rootNode != nullptr)
-    {
-        std::cout << rootNode->info << " ";
-        preOrderHelper(rootNode->left);
-        preOrderHelper(rootNode->right);
-    }
-}
-
-void BstTree::postOrderHelper(Node *rootNode) const
-{
-    if(rootNode != nullptr)
-    {
-        postOrderHelper(rootNode->left);
-        postOrderHelper(rootNode->right);
-        std::cout << rootNode->info << " ";
     }
 }
 
@@ -214,6 +191,35 @@ Node *&BstTree::minHelper(Node *&rootNode) {
     else return minHelper(rootNode->left);
 }
 
+void BstTree::inOrderHelper(Node *rootNode) const{
+    if(rootNode != nullptr)
+    {
+        inOrderHelper(rootNode->left);
+        std::cout << rootNode->info << " ";
+        inOrderHelper(rootNode->right);
+    }
+}
+
+void BstTree::preOrderHelper(Node *rootNode) const
+{
+    if(rootNode != nullptr)
+    {
+        std::cout << rootNode->info << " ";
+        preOrderHelper(rootNode->left);
+        preOrderHelper(rootNode->right);
+    }
+}
+
+void BstTree::postOrderHelper(Node *rootNode) const
+{
+    if(rootNode != nullptr)
+    {
+        postOrderHelper(rootNode->left);
+        postOrderHelper(rootNode->right);
+        std::cout << rootNode->info << " ";
+    }
+}
+
 //free the memory in destructor
 void BstTree::deleteTree(Node *&rootNode)
 {
@@ -231,8 +237,8 @@ int BstTree::assignHeight(Node *nodeOne, Node *nodeTwo, int mode) {
     }
     //mode == 0: insertion
     else if(mode == 0) {
-        int newheight = nodeTwo->height + 1;
-        return newheight > nodeOne->height ? newheight : nodeOne->height;
+        int newHeight = nodeTwo->height + 1;
+        return newHeight > nodeOne->height ? newHeight : nodeOne->height;
     }
     //mode == 1: insertion
     else {
@@ -267,6 +273,7 @@ BstTree &BstTree::operator=(const BstTree &bst) {
     }
     return *this;
 }
+
 std::ostream &operator<<(std::ostream &os, const BstTree &bst) {
 
     os << "In order traversal: ";

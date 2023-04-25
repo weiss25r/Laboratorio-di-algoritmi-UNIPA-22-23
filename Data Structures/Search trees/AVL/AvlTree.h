@@ -9,10 +9,12 @@
 
 class AvlTree : public BstTree{
 public:
+    AvlTree() : BstTree() {};
     explicit AvlTree(int rootKey);
     explicit AvlTree(const std::vector<int> &keys);
 
     void insert(int info) override;
+    void remove(int info) override;
     //others costructor and operators...
 private:
     void rotateLeft(Node *& node);
@@ -22,6 +24,7 @@ private:
 
 protected:
     void insertHelper(Node *&rootNode, int info) override;
+    void removeHelper(Node *&rootNode, int info) override;
 };
 
 
