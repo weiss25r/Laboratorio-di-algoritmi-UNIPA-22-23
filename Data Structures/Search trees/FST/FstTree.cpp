@@ -2,47 +2,49 @@
 // Created by weiss on 27/04/23.
 //
 
+#pragma once
 #include "FstTree.h"
 #include <iostream>
 
-FstTree::FstTree(int rootKey) {
-    root = nullptr;
-    insertHelper(root, rootKey);
-}
-
-void FstTree::insert(int info) {
+template <class T>
+void FstTree<T>::insert(T info) {
     insertHelper(root, info);
 }
 
-bool FstTree::search(int key) {
+template <class T>
+bool FstTree<T>::search(T key) {
     return fogSearch(root, key);
 }
 
-void FstTree::remove(int key)
+template <class T>
+void FstTree<T>::remove(T key)
 {
     removeHelper(root, key);
 }
 
-void FstTree::rotateRight(Node *&node) {
+template <class T>
+void FstTree<T>::rotateRight(Node<T> *&node) {
     if(node->left == nullptr) return;
 
-    Node * leftSon = node->left;
+    Node<T> * leftSon = node->left;
     node->left = leftSon->right;
     leftSon->right = node;
     node = leftSon;
 }
 
-void FstTree::rotateLeft(Node *&node) {
+template <class T>
+void FstTree<T>::rotateLeft(Node<T> *&node) {
     //security checks...
     if(node->right == nullptr) return;
 
-    Node * rightSon = node->right;
+    Node<T> * rightSon = node->right;
     node->right = rightSon->left;
     rightSon->left = node;
     node = rightSon;
 }
 
-bool FstTree::fogSearch(Node *&node, int key) {
+template <class T>
+bool FstTree<T>::fogSearch(Node<T> *&node, T key) {
     if(node == nullptr) return false;
 
     else if(node->info == key) {
@@ -64,11 +66,12 @@ bool FstTree::fogSearch(Node *&node, int key) {
     }
 }
 
-void FstTree::insertHelper(Node *&rootNode, int info)
+template <class T>
+void FstTree<T>::insertHelper(Node<T> *&rootNode, T info)
 {
     if(rootNode == nullptr)
     {
-        Node *node = new Node(info, 0, nullptr, nullptr);
+        Node<T> *node = new Node<T>(info, 0, nullptr, nullptr);
         rootNode = node;
     }
     else
@@ -84,7 +87,8 @@ void FstTree::insertHelper(Node *&rootNode, int info)
     }
 }
 
-void FstTree::removeHelper(Node *&rootNode, int info)
+template <class T>
+void FstTree<T>::removeHelper(Node<T> *&rootNode, T info)
 {
     if(rootNode == nullptr) return;
 
@@ -98,19 +102,19 @@ void FstTree::removeHelper(Node *&rootNode, int info)
         rotateLeft(rootNode);
     }
 
-    //se viene trovato
+        //se viene trovato
     else
     {
         if(rootNode->left == nullptr)
         {
-            Node *tmp = rootNode->right;
+            Node<T> *tmp = rootNode->right;
             delete rootNode;
             rootNode = tmp;
         }
 
         else if(rootNode->right == nullptr)
         {
-            Node *tmp = rootNode->left;
+            Node<T> *tmp = rootNode->left;
             delete rootNode;
             rootNode = tmp;
         }
@@ -118,7 +122,7 @@ void FstTree::removeHelper(Node *&rootNode, int info)
         else
         {
             //si cerca il minimo del sottoalbero destro
-            Node *& minNode = minHelper(rootNode->right);
+            Node<T> *& minNode = minHelper(rootNode->right);
 
             //si copia il valore del minimo nel nodo da cancellare
             rootNode->info = minNode->info;
@@ -129,11 +133,9 @@ void FstTree::removeHelper(Node *&rootNode, int info)
     }
 }
 
-FstTree::~FstTree() {
-    deleteTree(root);
-}
 
-void FstTree::deleteTree(Node *&rootNode)
+template <class T>
+void FstTree<T>::deleteTree(Node<T> *&rootNode)
 {
     if(rootNode != nullptr)
     {
@@ -143,11 +145,13 @@ void FstTree::deleteTree(Node *&rootNode)
     }
 }
 
-void FstTree::inOrder() {
+template <class T>
+void FstTree<T>::inOrder() {
     inOrderHelper(root);
 }
 
-void FstTree::inOrderHelper(Node *root)
+template <class T>
+void FstTree<T>::inOrderHelper(Node<T> *root)
 {
     if(root != nullptr)
     {
@@ -158,7 +162,8 @@ void FstTree::inOrderHelper(Node *root)
 }
 
 
-Node *&FstTree::minHelper(Node *&rootNode) {
+template <class T>
+Node<T> *&FstTree<T>::minHelper(Node<T> *&rootNode) {
     if(rootNode == nullptr) {
         return rootNode;
     }

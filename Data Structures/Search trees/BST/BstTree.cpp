@@ -1,86 +1,101 @@
 //
 // Created by Raffaele on 21/04/2023.
 //
-
+#pragma once
 #include "BstTree.h"
 
-#include <iostream>
 #include <climits>
-BstTree::BstTree(int rootKey) {
-    root = new Node(rootKey, 0, nullptr, nullptr);
+
+
+template<class T>
+BstTree<T>::BstTree(T rootKey) {
+    root = new Node<T>(rootKey, 0, nullptr, nullptr);
 }
 
-BstTree::BstTree(const std::vector<int> &keys) {
+template<class T>
+BstTree<T>::BstTree(const std::vector<T> &keys) {
     root = nullptr;
     for(int key : keys) {
-        BstTree::insertHelper(root, key);
+        BstTree<T>::insertHelper(root, key);
     }
 }
 
-BstTree::BstTree(const BstTree &bst) {
+template<class T>
+BstTree<T>::BstTree(const BstTree &bst) {
     root = nullptr;
     copyHelper(root, bst.root);
 }
 
-BstTree::~BstTree() {
+template<class T>
+BstTree<T>::~BstTree() {
     deleteTree(root);
 }
 
+template<class T>
 //getter for height
-int BstTree::getHeight() const {
+int BstTree<T>::getHeight() const {
     return this->root != nullptr ? root->height : -1;
 }
 
+template<class T>
 //dictionary operations
-void BstTree::insert(int info) {
+void BstTree<T>::insert(int info) {
     insertHelper(root, info);
 }
 
-bool BstTree::search(int key) const{
+template<class T>
+bool BstTree<T>::search(int key) const{
     return searchHelper(root, key);
 }
 
-void BstTree::remove(int key) {
+template<class T>
+void BstTree<T>::remove(int key) {
     if(searchHelper(root, key))
         removeHelper(root, key);
 }
 
+template<class T>
 //traversals
-void BstTree::preOrder() const {
+void BstTree<T>::preOrder() const {
     preOrderHelper(root);
 }
 
-void BstTree::postOrder() const{
+template<class T>
+void BstTree<T>::postOrder() const{
     postOrderHelper(root);
 }
 
-void BstTree::inOrder() const{
+template<class T>
+void BstTree<T>::inOrder() const{
     inOrderHelper(root);
 }
 
+template<class T>
 //max and min
-int BstTree::max() {
+T BstTree<T>::max() {
     if(root != nullptr) {
-        Node *maxNode = maxHelper(root);
+        Node<T> *maxNode = maxHelper(root);
         return maxNode->info;
     }
-    else return INT_MAX;
+    else return nullptr;
 }
 
-int BstTree::min() {
+template<class T>
+T BstTree<T>::min() {
     if(root != nullptr) {
-        Node *minNode = minHelper(root);
+        Node<T> *minNode = minHelper(root);
         return minNode->info;
     }
-    else return INT_MIN;
+    else return nullptr;
 }
 
+template<class T>
 //"helper" methods
-void BstTree::insertHelper(Node *&rootNode, int info)
+void BstTree<T>::insertHelper(Node<T> *&rootNode, int info)
 {
     if(rootNode == nullptr)
     {
-        Node *node = new Node(info, 0, nullptr, nullptr);
+        auto *node = new Node<T>(info, 0, nullptr, nullptr);
         rootNode = node;
     }
     else
@@ -96,7 +111,8 @@ void BstTree::insertHelper(Node *&rootNode, int info)
     }
 }
 
-bool BstTree::searchHelper(Node *rootNode, int info) const{
+template<class T>
+bool BstTree<T>::searchHelper(Node<T> *rootNode, int info) const{
     if(rootNode == nullptr) {
         return false;
     }
@@ -113,7 +129,8 @@ bool BstTree::searchHelper(Node *rootNode, int info) const{
     }
 }
 
-void BstTree::removeHelper(Node *&rootNode, int info)
+template<class T>
+void BstTree<T>::removeHelper(Node<T> *&rootNode, int info)
 {
     //caso 1: l'elemento non è stato trovato
     if(rootNode == nullptr) return;
@@ -128,7 +145,7 @@ void BstTree::removeHelper(Node *&rootNode, int info)
         rootNode->height = assignHeight(rootNode);
     }
 
-    //se viene trovato
+        //se viene trovato
     else
     {
         //caso 1: il nodo da cancellare è una foglia oppure ha un figlio
@@ -136,24 +153,24 @@ void BstTree::removeHelper(Node *&rootNode, int info)
         //..destro
         if(rootNode->left == nullptr)
         {
-            Node *tmp = rootNode->right;
+            Node<T> *tmp = rootNode->right;
             delete rootNode;
             rootNode = tmp;
         }
 
-        //.. sinistro
+            //.. sinistro
         else if(rootNode->right == nullptr)
         {
-            Node *tmp = rootNode->left;
+            Node<T> *tmp = rootNode->left;
             delete rootNode;
             rootNode = tmp;
         }
 
-        //caso 2: il nodo da cancellare ha 2 figli
+            //caso 2: il nodo da cancellare ha 2 figli
         else
         {
             //si cerca il minimo del sottoalbero destro
-            Node *& minNode = minHelper(rootNode->right);
+            Node<T> *& minNode = minHelper(rootNode->right);
 
             //si copia il valore del minimo nel nodo da cancellare
             rootNode->info = minNode->info;
@@ -164,7 +181,8 @@ void BstTree::removeHelper(Node *&rootNode, int info)
     }
 }
 
-Node *BstTree::maxHelper(Node *rootNode) const {
+template<class T>
+Node<T> *BstTree<T>::maxHelper(Node<T> *rootNode) const {
     if(rootNode == nullptr) {
         return nullptr;
     }
@@ -174,7 +192,8 @@ Node *BstTree::maxHelper(Node *rootNode) const {
     else return maxHelper(rootNode->right);
 }
 
-Node *&BstTree::minHelper(Node *&rootNode) {
+template<class T>
+Node<T> *&BstTree<T>::minHelper(Node<T> *&rootNode) {
     if(rootNode == nullptr) {
         return rootNode;
     }
@@ -184,7 +203,8 @@ Node *&BstTree::minHelper(Node *&rootNode) {
     else return minHelper(rootNode->left);
 }
 
-void BstTree::inOrderHelper(Node *rootNode) const{
+template<class T>
+void BstTree<T>::inOrderHelper(Node<T> *rootNode) const{
     if(rootNode != nullptr)
     {
         inOrderHelper(rootNode->left);
@@ -193,7 +213,8 @@ void BstTree::inOrderHelper(Node *rootNode) const{
     }
 }
 
-void BstTree::preOrderHelper(Node *rootNode) const
+template<class T>
+void BstTree<T>::preOrderHelper(Node<T> *rootNode) const
 {
     if(rootNode != nullptr)
     {
@@ -203,7 +224,8 @@ void BstTree::preOrderHelper(Node *rootNode) const
     }
 }
 
-void BstTree::postOrderHelper(Node *rootNode) const
+template<class T>
+void BstTree<T>::postOrderHelper(Node<T> *rootNode) const
 {
     if(rootNode != nullptr)
     {
@@ -213,8 +235,10 @@ void BstTree::postOrderHelper(Node *rootNode) const
     }
 }
 
+
+template<class T>
 //free the memory in destructor
-void BstTree::deleteTree(Node *&rootNode)
+void BstTree<T>::deleteTree(Node<T> *&rootNode)
 {
     if(rootNode != nullptr)
     {
@@ -224,21 +248,23 @@ void BstTree::deleteTree(Node *&rootNode)
     }
 }
 
-int BstTree::assignHeight(Node *node) {
+template<class T>
+int BstTree<T>::assignHeight(Node<T> *node) {
     int leftHeight = node->left != nullptr ? node->left->height : -1 ;
     int rightHeight = node->right != nullptr ? node->right->height : -1;
 
     return 1 + std::max(leftHeight, rightHeight);
 }
 
+template<class T>
 
-void BstTree::copyHelper(Node *&rootOne, Node *rootTwo)
+void BstTree<T>::copyHelper(Node<T> *&rootOne, Node<T> *rootTwo)
 {
     if(rootTwo != nullptr)
     {
         //visita in PRE-ordine
         //copia la radice
-        rootOne = new Node(rootTwo->info, rootTwo->height, nullptr, nullptr);
+        rootOne = new Node<T>(rootTwo->info, rootTwo->height, nullptr, nullptr);
 
         //copia il sottoalbero sinistro
         copyHelper(rootOne->left, rootTwo->left);
@@ -246,8 +272,9 @@ void BstTree::copyHelper(Node *&rootOne, Node *rootTwo)
     }
 }
 
+template<class T>
 //operators
-BstTree &BstTree::operator=(const BstTree &bst) {
+BstTree<T>& BstTree<T>::operator=(const BstTree &bst) {
     if(this != &bst)
     {
         deleteTree(root);
@@ -257,7 +284,9 @@ BstTree &BstTree::operator=(const BstTree &bst) {
     return *this;
 }
 
-std::ostream &operator<<(std::ostream &os, const BstTree &bst) {
+
+template<class T>
+std::ostream &operator<<(std::ostream &os, const BstTree<T> &bst) {
 
     if(!bst.isEmpty()) {
         os << "In order traversal: ";

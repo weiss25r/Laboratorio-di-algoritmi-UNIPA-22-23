@@ -7,25 +7,30 @@
 
 #include "../BST/BstTree.h"
 
-class AvlTree : public BstTree{
-public:
-    AvlTree() : BstTree() {};
-    explicit AvlTree(int rootKey);
-    explicit AvlTree(const std::vector<int> &keys);
+template <class T>
 
-    void insert(int info) override;
-    void remove(int info) override;
-    //others costructor and operators...
+class AvlTree : public BstTree<T>{
+public:
+    AvlTree() : BstTree<T>() {};
+    explicit AvlTree(T rootKey);
+    explicit AvlTree(const std::vector<T> &keys);
+
+    void insert(T info) override;
+    void remove(T info) override;
+
+    //more costructors and operators...
 private:
-    void rotateLeft(Node *& node);
-    void rotateRight(Node *& node);
-    void fixTree(Node *&node, int direction);
-    int getNodeHeight(Node *node);
+    void rotateLeft(Node<T> *& node);
+    void rotateRight(Node<T> *& node);
+    void fixTree(Node<T> *&node, int direction);
+    int getNodeHeight(Node<T> *node);
 
 protected:
-    void insertHelper(Node *&rootNode, int info) override;
-    void removeHelper(Node *&rootNode, int info) override;
+    void insertHelper(Node<T> *&rootNode, int info) override;
+    void removeHelper(Node<T> *&rootNode, int info) override;
 };
 
 
 #endif //AVL_AVLTREE_H
+
+#include "AvlTree.cpp"

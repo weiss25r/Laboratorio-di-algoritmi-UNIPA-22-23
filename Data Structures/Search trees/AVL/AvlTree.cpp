@@ -2,37 +2,45 @@
 // Created by Raffaele on 24/04/2023.
 //
 
+#pragma once
+
 #include "AvlTree.h"
 
-AvlTree::AvlTree(int rootKey) : BstTree(rootKey) {}
+template <class T>
+AvlTree<T>::AvlTree(T rootKey) : BstTree<T>(rootKey) {
 
-AvlTree::AvlTree(const std::vector<int> &keys) : BstTree(keys) {
-    root = nullptr;
+}
+
+template <class T>
+AvlTree<T>::AvlTree(const std::vector<T> &keys) : BstTree<T>(keys) {
+    this->root = nullptr;
     for(int key : keys) {
-        AvlTree::insertHelper(root, key);
+        AvlTree::insertHelper(this->root, key);
     }
 }
 
-void AvlTree::insert(int info) {
-    this->insertHelper(root, info);
+template <class T>
+void AvlTree<T>::insert(T info) {
+    this->insertHelper(this->root, info);
 }
 
-void AvlTree::insertHelper(Node *&rootNode, int info)
+template <class T>
+void AvlTree<T>::insertHelper(Node<T> *&rootNode, int info)
 {
     if(rootNode == nullptr)
     {
-        Node *node = new Node(info, 0, nullptr, nullptr);
+        auto *node = new Node<T>(info, 0, nullptr, nullptr);
         rootNode = node;
     }
     else
     {
         if(info <= rootNode->info) {
-            insertHelper(rootNode->left, info);
-            rootNode->height = assignHeight(rootNode);
+            this->insertHelper(rootNode->left, info);
+            rootNode->height = this->assignHeight(rootNode);
         }
         else {
-            insertHelper(rootNode->right, info);
-            rootNode->height = assignHeight(rootNode);
+            this->insertHelper(rootNode->right, info);
+            rootNode->height = this->assignHeight(rootNode);
         }
 
         //calcola fattore di bilanciamento
@@ -51,24 +59,25 @@ void AvlTree::insertHelper(Node *&rootNode, int info)
         }
     }
 }
-
-void AvlTree::remove(int key) {
-    removeHelper(root, key);
+template <class T>
+void AvlTree<T>::remove(T key) {
+    this->removeHelper(this->root, key);
 }
 
-void AvlTree::removeHelper(Node *&rootNode, int info)
+template <class T>
+void AvlTree<T>::removeHelper(Node<T> *&rootNode, int info)
 {
     //caso 1: l'elemento non è stato trovato
     if(rootNode == nullptr) return;
 
     //se rootNode != nullptr, si cerca il nodo da cancellare
     if(info < rootNode->info) {
-        removeHelper(rootNode->left, info);
-        rootNode->height = assignHeight(rootNode);
+        this->removeHelper(rootNode->left, info);
+        rootNode->height = this->assignHeight(rootNode);
     }
     else if(info > rootNode->info) {
-        removeHelper(rootNode->right, info);
-        rootNode->height = assignHeight(rootNode);
+        this->removeHelper(rootNode->right, info);
+        rootNode->height = this->assignHeight(rootNode);
     }
 
     //se viene trovato
@@ -79,7 +88,7 @@ void AvlTree::removeHelper(Node *&rootNode, int info)
         //..destro
         if(rootNode->left == nullptr)
         {
-            Node *tmp = rootNode->right;
+            Node<T> *tmp = rootNode->right;
             delete rootNode;
             rootNode = tmp;
         }
@@ -87,7 +96,7 @@ void AvlTree::removeHelper(Node *&rootNode, int info)
         //.. sinistro
         else if(rootNode->right == nullptr)
         {
-            Node *tmp = rootNode->left;
+            Node<T> *tmp = rootNode->left;
             delete rootNode;
             rootNode = tmp;
         }
@@ -96,13 +105,13 @@ void AvlTree::removeHelper(Node *&rootNode, int info)
         else
         {
             //si cerca il minimo del sottoalbero destro
-            Node *& minNode = minHelper(rootNode->right);
+            Node<T> *& minNode = this->minHelper(rootNode->right);
 
             //si copia il valore del minimo nel nodo da cancellare
             rootNode->info = minNode->info;
 
             //si cancella il minimo
-            removeHelper(minNode, minNode->info);
+            this->removeHelper(minNode, minNode->info);
         }
     }
 
@@ -124,36 +133,38 @@ void AvlTree::removeHelper(Node *&rootNode, int info)
     }
 }
 
-void AvlTree::rotateLeft(Node *&node) {
+template <class T>
+void AvlTree<T>::rotateLeft(Node<T> *&node) {
     //security checks...
-    Node * rightSon = node->right;
+    Node<T> * rightSon = node->right;
     node->right = rightSon->left;
     rightSon->left = node;
     node = rightSon;
 
     //aggiorna le altezze per "v"
-    node->left->height = assignHeight(node->left);
+    node->left->height = this->assignHeight(node->left);
     //.. e per u
-    node->height = assignHeight(node);
+    node->height = this->assignHeight(node);
 }
-
-void AvlTree::rotateRight(Node *&node) {
+template <class T>
+void AvlTree<T>::rotateRight(Node<T> *&node) {
 
     //aggiorna le altezze
-    Node * leftSon = node->left;
+    Node<T> * leftSon = node->left;
     node->left = leftSon->right;
     leftSon->right = node;
     node = leftSon;
 
     //aggiorna le altezze per "v"
-    node->right->height = assignHeight(node->right);
+    node->right->height = this->assignHeight(node->right);
 
     //.. e per u
-    node->height = assignHeight(node);
+    node->height = this->assignHeight(node);
 
 }
 
-void AvlTree::fixTree(Node *&node, int direction) {
+template <class T>
+void AvlTree<T>::fixTree(Node<T> *&node, int direction) {
 
     //sbilanciamento a sx
     if(direction == 1)
@@ -186,9 +197,9 @@ void AvlTree::fixTree(Node *&node, int direction) {
 
 }
 
-int AvlTree::getNodeHeight(Node *node) {
+template <class T>
+int AvlTree<T>::getNodeHeight(Node<T> *node) {
     return node == nullptr ? -1 : node->height;
 }
-
 
 

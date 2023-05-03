@@ -6,49 +6,53 @@
 #define SEARCH_TREES_FSTTREE_H
 
 #include "BstTree.h"
-
+#include <iostream>
 /* A Fog Search Tree is a splay tree that uses the "Move to root" method */
 
-class FstTree {
+template <class T>
 
+class FstTree {
 public:
     FstTree() { root = nullptr; }
 
-    explicit FstTree(int rootKey);
+    explicit FstTree(T rootKey) {
+        root = nullptr;
+        insertHelper(root, rootKey);
+    };
 
-    bool search(int key);
+    bool search(T key);
 
-    void insert(int info);
+    void insert(T info);
 
-    void remove(int key);
+    void remove(T key);
 
     void inOrder();
 
     //..
 
-    ~FstTree();
+    ~FstTree() {
+        deleteTree(root);
+    };
 
 private:
-    Node *root;
+    Node<T> *root;
 
-    void insertHelper(Node *&rootNode, int info);
+    void insertHelper(Node<T> *&rootNode, T info);
 
-    void removeHelper(Node *&rootNode, int info);
+    void removeHelper(Node<T> *&rootNode, T info);
 
-    void rotateRight(Node *&node);
+    void rotateRight(Node<T> *&node);
 
-    void rotateLeft(Node *&node);
+    void rotateLeft(Node<T> *&node);
 
-    bool fogSearch(Node *&node, int key);
+    bool fogSearch(Node<T> *&node, T key);
 
-    void deleteTree(Node *&rootNode);
+    void deleteTree(Node<T> *&rootNode);
 
-    void inOrderHelper(Node *root);
+    void inOrderHelper(Node<T> *root);
 
-    Node *&minHelper(Node *&rootNode);
-
-    //..
-
+    Node<T> *&minHelper(Node<T> *&rootNode);
 };
 
 #endif //SEARCH_TREES_FSTTREE_H
+#include "FstTree.cpp"
