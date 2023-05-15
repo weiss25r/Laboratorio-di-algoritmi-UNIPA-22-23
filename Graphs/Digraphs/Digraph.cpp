@@ -1,14 +1,17 @@
 //
-// Created by weiss on 11/05/23.
+// Created by Raffaele on 11/05/23.
 //
 
 #include "Digraph.h"
 #include <iostream>
 #include <fstream>
-#include <deque>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <list>
 
 Digraph::Digraph(int v) {
-    adj = vector<Node*>(v, nullptr);
+    adj = vector<list<int>>(v);
     numV = v;
     numE = 0;
 }
@@ -18,125 +21,129 @@ Digraph::Digraph(std::ifstream inputFile) {
     int v, w;
     int e;
 
-    inputFile >> numV;
-    adj = vector<Node *>(numV, nullptr);
+    if(inputFile.is_open()) {
+        inputFile >> numV;
+        numE = 0;
 
-    numE = 0;
+        adj = vector<list<int>>(numV);
 
-    inputFile >> e;
+        inputFile >> e;
 
-    for(int i = 0; i < e; i++) {
-        inputFile >> v;
-        inputFile >> w;
-        insertEdge(v, w);
-    }
-}
-
-void Digraph::insertEdge(int v, int u) {
-    //insert edge (v, u);
-    Node* list = adj.at(v);
-    Node *prev = nullptr;
-
-    if(list == nullptr) {
-        adj.at(v) = new Node(u, nullptr);
-    }
-
-    else
-    {
-        while(list != nullptr)
-        {
-            prev = list;
-            list = list->next;
+        for (int i = 0; i < e; i++) {
+            inputFile >> v;
+            inputFile >> w;
+            insertEdge(v, w);
         }
-
-        list = new Node(u, nullptr);
-        prev->next = list;
     }
-    numE++;
-}
-
-void Digraph::freeList(Node *list) {
-    Node *tmp;
-
-    while(list != nullptr) {
-        tmp = list;
-        list = list->next;
-        delete tmp;
+    else {
+        std::cout << "Il file non è stato aperto correttamente" << std::endl;
+        numV = 0;
+        numE = 0;
     }
 }
 
-Digraph::~Digraph() {
+int Digraph::getNumV() const {
+    return numV;
+}
+
+int Digraph::getNumE() const {
+    return numE;
+}
+
+const vector<list<int>> &Digraph::getAdj() const {
+    return adj;
+}
+
+void Digraph::insertEdge(int v, int w) {
+    if(v >= 0 && w >= 0 && v < numV && w < numV) {
+        adj[v].push_back(w);
+        numE++;
+    } else {
+        std::cout << "Uno dei vertici specificati non esiste nel grafo" << std::endl;
+    }
+}
+
+bool Digraph::pointsTo(int v, int w) {
+    if(v >= 0 && w >= 0 && v < numV && w < numV) {
+        return std::find(adj[v].begin(), adj[v].end(), w) != adj[v].end();
+    }
+    else return false;
+}
+
+const list<int> & Digraph::neighbours(int v) {
+    if(v < 0 || v >= numV) {
+        throw std::out_of_range("Il vertice specificato non esiste nel grafo");
+    } else return adj[v];
+}
+
+void Digraph::printGraph()
+{
+    std::cout << "|V|: " << numV << std::endl << "|E|: " << numE << std::endl;
     for(int i = 0; i < numV; i++) {
-        freeList(adj.at(i));
+        list<int> l = adj[i];
+
+        for(int w : l) {
+            std::cout << i << "->" << w << std::endl;
+        }
     }
 }
 
 Digraph Digraph::reverse() {
+    //(v, w) -> (w, v)
     Digraph reverse(this->numV);
 
     for(int i = 0; i < this->numV; i++) {
-        Node *list = adj.at(i);
-        while(list != nullptr) {
-            reverse.insertEdge(list->info, i);
-            list = list->next;
+        list<int> l = adj[i];
+
+        for(int w : l) {
+            insertEdge(w, i);
         }
+
     }
     return reverse;
 }
 
-int Digraph::size() const{
-    return numV;
-}
-
-const vector<Node *>& Digraph::getAdjList() const {
-    return this->adj;
-}
 
 //alternative algorithm for topological sort
 vector<int> Digraph::topologicalSort() {
+    //si assume che il grafo sia un DAG
     vector<int> inDregrees(numV);
-    vector<int> topologicalSort;
-    std::deque<int> zeros;
-    //inizializzazione: calcola gli inDregrees di ogni nodo
+    vector<int> topologicalSort(numV);
+    std::queue<int> zeros;
 
+    int j = 0;
+
+    //inizializzazione: calcola gli in-degrees di ogni nodo
     for(int i = 0; i < numV; i++) {
-        Node *list = adj.at(i);
-        while(list != nullptr) {
-            inDregrees[list->info]++;
-            list = list->next;
+        list<int> l = adj[i];
+
+        for(int w : l) {
+            inDregrees[w]++;
         }
     }
 
     //trova il primo nodo con in-degree 0
-
-
     for(int k = 0; k < numV; k++) {
         if(inDregrees[k] == 0) {
-            zeros.push_back(k);
+            zeros.push(k);
         }
     }
 
-    /*
-    if(k == numV) {
-        std::cout << "Il grafo non ammette un ordinamento topologico" << std::endl;
-    }
-    */
 
     while(!zeros.empty())
     {
         int v = zeros.front();
-        zeros.pop_front();
-        topologicalSort.push_back(v);
+        zeros.pop();
+        topologicalSort[j++] = v;
 
         //aggiorna la tabella
-        Node *list = adj.at(v);
+        list<int> l = adj[v];
 
-        while(list != nullptr){
-            inDregrees[list->info]--;
-            if(inDregrees[list->info] == 0){
-                zeros.push_back(list->info);
+        for(int w : l){
+            inDregrees[w]--;
+            if(inDregrees[w] == 0){
+                zeros.push(w);
             }
-            list = list->next;
         }
     }
 
@@ -144,16 +151,12 @@ vector<int> Digraph::topologicalSort() {
 
 }
 
-void Digraph::printGraph()
-{
-    std::cout << "|V|: " << numV << std::endl << "|E|: " << numE << std::endl;
-    for(int i = 0; i < numV; i++) {
-        Node *tmp = adj[i];
 
-        while(tmp != nullptr) {
-            std::cout << i << "->" << tmp->info << std::endl;
-            tmp = tmp->next;
-        }
-    }
-}
+
+
+
+
+
+
+
 

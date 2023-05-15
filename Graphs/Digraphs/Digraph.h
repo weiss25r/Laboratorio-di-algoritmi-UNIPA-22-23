@@ -1,5 +1,5 @@
 //
-// Created by weiss on 11/05/23.
+// Created by Raffaele on 11/05/23.
 //
 
 #ifndef GRAPHS_DIGRAPH_H
@@ -7,34 +7,32 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 using std::vector;
 using std::ifstream;
-
-struct Node {
-    int info;
-    Node *next;
-
-    Node(int info, Node *next) : info(info), next(next) {};
-
-};
+using std::list;
 
 class Digraph {
 public:
     explicit Digraph(int v);
     explicit Digraph(ifstream inputFile);
-    virtual ~Digraph();
 
-    void insertEdge(int v, int u);
-    int size() const;
-    const vector<Node*>& getAdjList() const;
+    int getNumV() const;
+    int getNumE() const;
+    const vector<list<int>> &getAdj() const;
+
+    void insertEdge(int v, int w);
+    bool pointsTo(int v, int w);
+    const list<int> & neighbours(int v);
+    void printGraph();
+
     Digraph reverse();
     vector<int> topologicalSort();
-    void printGraph();
+
 private:
     int numV, numE;
-    vector<Node*> adj;
-    void freeList(Node *list);
+    vector<list<int>> adj;
 };
 
 #endif //GRAPHS_DIGRAPH_H

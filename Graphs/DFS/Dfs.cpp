@@ -5,11 +5,16 @@
 #include "Dfs.h"
 #include <algorithm>
 
-Dfs::Dfs(const Digraph& g) : graph(g), marked(g.size()) { }
+Dfs::Dfs(const Digraph& g) : graph(g), marked(g.getNumV()) { }
 
-void Dfs::dfs(int source) {
-    if(source <= graph.size())
+void Dfs::dfs(int source)
+{
+    if(graph.getNumV() >= 0 && source < graph.getNumV())
     {
+        preOrder = std::queue<int>();
+        postOrder = std::queue<int>();
+        revPostOrder = std::stack<int>();
+
         dfsHelper(source);
         std::fill(marked.begin(), marked.end(), false);
     }
@@ -18,17 +23,17 @@ void Dfs::dfs(int source) {
 
 void Dfs::dfsHelper(int source) {
     marked[source] = true;
-    Node *edges = graph.getAdjList().at(source);
+    auto edges = graph.getAdj().at(source);
 
     //pre-order
     preOrder.push(source);
 
-    while(edges != nullptr) {
-        if(!marked[edges->info]) {
-            dfsHelper(edges->info);
+    for(const int &vertex : edges) {
+        if(!marked[vertex]) {
+            dfsHelper(vertex);
         }
-        edges = edges->next;
     }
+
     postOrder.push(source);
     revPostOrder.push(source);
 }

@@ -3,10 +3,11 @@
 #include "Digraphs/Digraph.h"
 #include "DFS/Dfs.h"
 
-using namespace std;
+using std::cout;
+using std::endl;
 
-int main() {
-
+int main()
+{
     Digraph g(ifstream("Test files/sedg.txt"));
     Digraph topSort(ifstream("Test files/tsort.txt"));
 
@@ -38,8 +39,9 @@ int main() {
 
     cout << endl << "A topological sort of graph topSort" << endl;
     auto topOrder = topSort.topologicalSort();
-    for(int i = 0; i < topSort.size(); i++) {
-        cout << topOrder.at(i) << " ";
+
+    for(int v : topOrder) {
+        cout << v << " ";
     }
 
     cout << endl;
